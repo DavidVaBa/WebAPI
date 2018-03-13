@@ -43,7 +43,10 @@ module.exports = function(app){
     //Song routes
     apiRoutes.use('/songs', songRoutes);
     songRoutes.get('/', SongController.getSongs);
+    songRoutes.get('/:song_id', SongController.getSong);
     songRoutes.post('/', SongController.createSong);
+    songRoutes.put('/:song_id', SongController.updateSong);
+    songRoutes.delete('/:song_id', SongController.deleteSong);
 
     // Set up routes
     app.use('/v1', apiRoutes);

@@ -16,6 +16,20 @@ exports.getSongs = function(req, res, next){
 
 }
 
+exports.getSong = function(req, res, next){
+
+    Song.findOne({_id: req.params.song_id}, function(err, existingSong){
+
+        if(err)
+            return next(err);
+
+        if(!existingSong)
+            return res.status(404).send({error: 'Song not found'});
+
+        res.status(200).send(existingSong);
+    })
+}
+
 exports.createSong = function(req, res, next){
 
     var name = req.body.name;
@@ -72,6 +86,50 @@ exports.createSong = function(req, res, next){
                     Song: song
                 });
            });
+        })
+    })
+}
+
+exports.deleteSong = function(req, res, next){
+    Song.remove({_id: req.params.song_id}, function(err, song){
+        if(err)
+            return next(err);
+
+        res.status(200).send("Successfully deleted");
+    });
+}
+
+exports.updateSong = function(req, res, next){
+    Song.findOne({_id:req.params.song_id}, function(err, song){
+        if(err)
+            return next(err);
+
+        song.name = req.body.name;
+        song._artist = req.body.artistId;
+        song._album = req.body.albumId;
+        song.duration = req.body.duration;
+
+        if(!song.name){
+            return res.status(400).send({error: 'You must enter a name'});
+        }
+    
+        if(!song._artist){
+            return res.status(400).send({error: 'You must enter an Artist Id'});
+        }
+    
+        if(!song._album){
+            return res.status(400).send({error: 'You must enter an Album Id'});
+        }
+
+        if(!song.duration){
+            return res.status(400).send({error: 'You must enter a duration'});
+        }
+
+        song.save(function(err){
+            if(err)
+                return next(err)
+
+            res.status(200).send("Successfully updated");
         })
     })
 }

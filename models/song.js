@@ -14,7 +14,7 @@ var SongSchema = new mongoose.Schema({
         ref: 'Album'
     },
     duration: {
-        type: Number,
+        type: String,
     }
 
 });
